@@ -22,4 +22,5 @@ matrix.o: matrix.c matrix.h
 	$(CC) $(CFLAGS) -c matrix.c
 
 clean:
+	rm ./main
 	rm *.o *~

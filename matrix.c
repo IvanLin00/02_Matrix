@@ -22,6 +22,12 @@ print the matrix such that it looks like
 the template in the top comment
 */
 void print_matrix(struct matrix *m) {
+  for(int r = 0; r < m->rows; r++){
+    for(int c  = 0; c < m -> cols; c ++){
+      printf("%f ", m->m[r][c]);
+    }
+    printf("\n");
+  }
 }
 
 /*-------------- void ident() --------------
@@ -30,6 +36,11 @@ Inputs:  struct matrix *m <-- assumes m is a square matrix
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
+  for(int r = 0; r < m -> rows; r++){
+    for(int c = 0; c < m -> cols; c ++){
+      if(r == c) m->m[r][c] = 1.000000;
+    }
+  }
 }
 
 
@@ -40,7 +51,20 @@ Inputs:  struct matrix *a
 multiply a by b, modifying b to be the product
 a*b -> b
 */
-void matrix_mult(struct matrix *a, struct matrix *b) {
+void matrix_mult(struct matrix *a, struct matrix *b){
+  double sum;
+  int acol;
+  struct matrix * copy = new_matrix(b-> rows, b-> cols);
+  copy_matrix(b,copy);
+
+  for(int brow = 0; brow < b-> rows; brow++){
+    for(int bcol = 0; bcol < b-> cols; bcol++){
+      for(acol = 0, sum = 0; acol < a-> cols; acol++){
+        sum += (a->m[brow][acol] * copy->m[acol][bcol]);
+      }
+      b->m[brow][bcol] = sum;
+    }
+  }
 }
 
 
@@ -98,14 +122,14 @@ void free_matrix(struct matrix *m) {
 
 /*======== void grow_matrix() ==========
 Inputs:  struct matrix *m
-         int newcols 
-Returns: 
+         int newcols
+Returns:
 
 Reallocates the memory for m->m such that it now has
 newcols number of collumns
 ====================*/
 void grow_matrix(struct matrix *m, int newcols) {
-  
+
   int i;
   for (i=0;i<m->rows;i++) {
       m->m[i] = realloc(m->m[i],newcols*sizeof(double));
@@ -116,8 +140,8 @@ void grow_matrix(struct matrix *m, int newcols) {
 
 /*-------------- void copy_matrix() --------------
 Inputs:  struct matrix *a
-         struct matrix *b 
-Returns: 
+         struct matrix *b
+Returns:
 
 copy matrix a to matrix b
 */
@@ -125,7 +149,7 @@ void copy_matrix(struct matrix *a, struct matrix *b) {
 
   int r, c;
 
-  for (r=0; r < a->rows; r++) 
-    for (c=0; c < a->cols; c++)  
-      b->m[r][c] = a->m[r][c];  
+  for (r=0; r < a->rows; r++)
+    for (c=0; c < a->cols; c++)
+      b->m[r][c] = a->m[r][c];
 }
